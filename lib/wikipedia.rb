@@ -17,6 +17,14 @@ module Wikipedia
     client.find( page, options )
   end
 
+  def self.find_by_id( page, options = {} )
+    client.find_by_id( page, options )
+  end
+
+  def self.find_around( lat, lng, options = {} )
+    client.find_around( lat, lng, options )
+  end
+
   def self.find_image( title, options = {} )
     client.find_image( title, options )
   end
@@ -39,7 +47,7 @@ module Wikipedia
     domain    'en.wikipedia.org'
     path      'w/api.php'
     user_agent(
-      'wikipedia-client/1.7 (https://github.com/kenpratt/wikipedia-client)'
+      'wikipedia-client/1.7 (https://github.com/Infotaku/wikipedia-client)'
     )
   end
 

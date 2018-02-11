@@ -18,6 +18,14 @@ module Wikipedia
       page
     end
 
+    def find_by_id( page_id, options = {} )
+      Page.new( request_by_id( page_id, options ) )
+    end
+
+    def find_around( lat, lng, options = {} )
+      Page.new( request_around( lat, lng, options ) )
+    end
+
     def find_image( title, options = {} )
       title = Url.new(title).title rescue title
       Page.new( request_image( title, options ) )
@@ -33,14 +41,45 @@ module Wikipedia
     # http://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions%7Clinks%7Cimages%7Ccategories&rvprop=content&titles=Flower%20(video%20game)
     def request_page( title, options = {} )
       request( {
-        action: 'query',
-        prop: %w[info revisions links extlinks images categories coordinates templates extracts pageimages],
-        rvprop: 'content',
-        inprop: 'url',
-        pithumbsize: 200,
-        explaintext: '',
-        titles: title
-      }.merge( options ) )
+         action: 'query',
+         prop: %w[info revisions links extlinks images categories coordinates templates extracts pageimages],
+         rvprop: 'content',
+         inprop: 'url',
+         pithumbsize: 200,
+         explaintext: '',
+         titles: title
+       }.merge( options ) )
+    end
+
+    # http://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions%7Clinks%7Cimages%7Ccategories&rvprop=content&titles=Flower%20(video%20game)
+    def request_by_id( page_id, options = {} )
+      request( {
+         action: 'query',
+         prop: %w[info revisions links extlinks images categories coordinates templates extracts pageimages],
+         rvprop: 'content',
+         inprop: 'url',
+         pithumbsize: 200,
+         explaintext: '',
+         pageids: page_id
+       }.merge( options ) )
+    end
+
+    # http://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions%7Clinks%7Cimages%7Ccategories&rvprop=content&titles=Flower%20(video%20game)
+    def request_around( lat, lng, options = {} )
+      user_options = options.extract!(:radius, :limit)
+
+      request( {
+         action: 'query',
+         generator: 'geosearch',
+         ggscoord: "#{lat}|#{lng}",
+         ggsradius: user_options.fetch(:radius, 1000),
+         ggslimit: user_options.fetch(:limit, 10),
+         prop: %w[info revisions links extlinks images categories coordinates templates extracts pageimages],
+         rvprop: 'content',
+         inprop: 'url',
+         pithumbsize: 200,
+         explaintext: ''
+       }.merge( options ) )
     end
 
     # http://en.wikipedia.org/w/api.php?action=query&format=json&prop=imageinfo&iiprop=url&iiurlwidth=200&titles=File:Albert%20Einstein%20Head.jpg
