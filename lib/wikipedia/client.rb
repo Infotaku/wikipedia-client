@@ -70,15 +70,12 @@ module Wikipedia
 
       request( {
          action: 'query',
-         generator: 'geosearch',
-         ggscoord: "#{lat}|#{lng}",
-         ggsradius: user_options.fetch(:radius, 1000),
-         ggslimit: user_options.fetch(:limit, 10),
-         prop: %w[info revisions links extlinks images categories coordinates templates extracts pageimages],
-         rvprop: 'content',
-         inprop: 'url',
-         pithumbsize: 200,
-         explaintext: ''
+         list: 'geosearch',
+         gscoord: "#{lat}|#{lng}",
+         gsradius: user_options.fetch(:radius, 1000),
+         gslimit: user_options.fetch(:limit, 10),
+         gsprop: %w[type],
+         #prop: %w[info revisions links extlinks images categories coordinates templates extracts pageimages],
        }.merge( options ) )
     end
 
